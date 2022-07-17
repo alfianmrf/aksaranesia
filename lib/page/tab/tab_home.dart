@@ -10,6 +10,7 @@ import 'package:aks/function/get_timeline.dart';
 import 'package:aks/page/create_post.dart';
 import 'package:readmore/readmore.dart';
 import 'package:aks/page/view_writing.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TabHome extends StatelessWidget {
   final DateTime todaysDate = DateTime.now();
@@ -211,6 +212,10 @@ class TabHome extends StatelessWidget {
                                         var users = user.data;
                                         DateTime date = stories[index]['created'].toDate();
                                         String likes = stories[index]['likes'] != null ? stories[index]['likes'].toString() : '0';
+                                        bool liked = true;
+                                        HomeData.isStoryLike(_auth.currentUser.uid, stories[index].id).then((value) {
+                                          liked = value;
+                                        });
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -265,8 +270,43 @@ class TabHome extends StatelessWidget {
                                                                     Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
                                                                   },
                                                                   child: ClipRRect(
-                                                                    borderRadius: BorderRadius.circular(20.0),
-                                                                    child: Image.asset("assets/images/like.png", width: 20, height: 20),
+                                                                    child: StreamBuilder<QuerySnapshot>(
+                                                                      stream: FirebaseFirestore.instance.collection('storylike')
+                                                                          .where('storyId', isEqualTo: stories[index].id)
+                                                                          .where('userId', isEqualTo: _auth.currentUser.uid)
+                                                                          .snapshots(),
+                                                                      builder: (context, snapshot) {
+                                                                        if(snapshot.connectionState == ConnectionState.waiting) {
+                                                                          return Container(
+                                                                            height: 20.0,
+                                                                            width: 20.0,
+                                                                            child: Center(
+                                                                              child: SizedBox(
+                                                                                child: CircularProgressIndicator(),
+                                                                                height: 10.0,
+                                                                                width: 10.0,
+                                                                              ),
+                                                                            )
+                                                                          );
+                                                                        }
+                                                                        else {
+                                                                          if(snapshot.data.docs.length > 0) {
+                                                                            return Icon(
+                                                                              // Icons.favorite,
+                                                                              Icons.thumb_up,
+                                                                              // color: Colors.red,
+                                                                              color: Colors.orangeAccent,
+                                                                            );
+                                                                          } else {
+                                                                            return Icon(
+                                                                              // Icons.favorite_border,
+                                                                              Icons.thumb_up_alt_outlined,
+                                                                              color: Colors.grey,
+                                                                            );
+                                                                          }
+                                                                        }
+                                                                      },
+                                                                    )
                                                                   ),
                                                                 ),
                                                               ),
