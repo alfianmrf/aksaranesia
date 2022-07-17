@@ -1,5 +1,7 @@
+import 'package:aks/function/create_post.dart';
 import 'package:aks/ui/elements.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aks/page/list_chat.dart';
 import 'package:aks/model/user_model.dart';
@@ -13,7 +15,9 @@ class TabHome extends StatelessWidget {
   final DateTime todaysDate = DateTime.now();
 
   Widget build(BuildContext context) {
-    UserData user = context.watch<UserNotifier>().user;
+    UserData userData = context.watch<UserNotifier>().user;
+    final _auth = FirebaseAuth.instance;
+
     return GestureDetector(
         onHorizontalDragEnd: (details) => {
           if (details.primaryVelocity > 0) {
@@ -44,7 +48,7 @@ class TabHome extends StatelessWidget {
             child: Column(
               children: [
                 StreamBuilder<QuerySnapshot>(
-                    stream: HomeData.writingSnapshot(user.classCode),
+                    stream: HomeData.writingSnapshot(userData.classCode),
                     builder: (context, snapshot) {
                       if(snapshot.data == null) {
                         return LinearProgressIndicator(minHeight: 2);
@@ -177,7 +181,7 @@ class TabHome extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(15),
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: HomeData.storySnapshot(user.classCode),
+                      stream: HomeData.storySnapshot(userData.classCode),
                       builder: (context, story) {
                         if(story.data == null) {
                           return Container();
@@ -206,6 +210,7 @@ class TabHome extends StatelessWidget {
                                       } else {
                                         var users = user.data;
                                         DateTime date = stories[index]['created'].toDate();
+                                        String likes = stories[index]['likes'] != null ? stories[index]['likes'].toString() : '0';
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -254,10 +259,24 @@ class TabHome extends StatelessWidget {
                                                         Expanded(
                                                           child: Row(
                                                             children: [
-                                                              ImageIcon(
-                                                                AssetImage("assets/images/like.png"),
-                                                                color: primary.withOpacity(0.5),
-                                                                size: 20,
+                                                              Material(
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
+                                                                  },
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(20.0),
+                                                                    child: Image.asset("assets/images/like.png", width: 20, height: 20),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 5),
+                                                              Text(
+                                                                likes,
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: primary.withOpacity(0.5),
+                                                                ),
                                                               ),
                                                               SizedBox(width: 15),
                                                               ImageIcon(
