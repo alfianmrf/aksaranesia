@@ -39,10 +39,16 @@ class Post {
 				// decrementing like count
 				_db.collection('story').doc(storyId).get().then((snapshot) {
 					int likes = snapshot.data()['likes'];
-					likes--;
+					if(likes > 0) {
+						likes--;
+						_db.collection('story').doc(storyId).update({
+							'likes': likes
+						});
+					}
+					/*likes--;
 					_db.collection('story').doc(storyId).update({
 						'likes': likes
-					});
+					});*/
 				});
 
 				// deleting like data

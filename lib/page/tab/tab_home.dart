@@ -212,10 +212,6 @@ class TabHome extends StatelessWidget {
                                         var users = user.data;
                                         DateTime date = stories[index]['created'].toDate();
                                         String likes = stories[index]['likes'] != null ? stories[index]['likes'].toString() : '0';
-                                        bool liked = true;
-                                        HomeData.isStoryLike(_auth.currentUser.uid, stories[index].id).then((value) {
-                                          liked = value;
-                                        });
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -271,10 +267,11 @@ class TabHome extends StatelessWidget {
                                                                   },
                                                                   child: ClipRRect(
                                                                     child: StreamBuilder<QuerySnapshot>(
-                                                                      stream: FirebaseFirestore.instance.collection('storylike')
-                                                                          .where('storyId', isEqualTo: stories[index].id)
-                                                                          .where('userId', isEqualTo: _auth.currentUser.uid)
-                                                                          .snapshots(),
+                                                                      stream: HomeData.storyLikeSnapshot(_auth.currentUser.uid, stories[index].id),
+                                                                        /*FirebaseFirestore.instance.collection('storylike')
+                                                                            .where('storyId', isEqualTo: stories[index].id)
+                                                                            .where('userId', isEqualTo: _auth.currentUser.uid)
+                                                                            .snapshots(),*/
                                                                       builder: (context, snapshot) {
                                                                         if(snapshot.connectionState == ConnectionState.waiting) {
                                                                           return Container(

@@ -23,16 +23,4 @@ class HomeData {
 		var _db = FirebaseFirestore.instance;
 		return _db.collection('storylike').where('userId', isEqualTo: userId).where('storyId', isEqualTo: storyId).snapshots();
 	}
-
-	static Future<bool> isStoryLike(String userId, String storyId) {
-		var _db = FirebaseFirestore.instance;
-		return _db.collection('storylike').where('userId', isEqualTo: userId).where('storyId', isEqualTo: storyId).get().then((snapshot) {
-			if(snapshot.docs.isEmpty) {
-				return false;
-			}
-			else {
-				return true;
-			}
-		});
-	}
 }
