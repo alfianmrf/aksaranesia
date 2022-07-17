@@ -15,55 +15,39 @@ class RegisterState extends State<Register> {
   final passwordController = TextEditingController(); 
   final nameController = TextEditingController(); 
   final confirmationController = TextEditingController();
-  String currentSelectedValue = "10MIPA1";
+  String currentSelectedValue = "X-1";
   String tipeUser = '0';
   String errorText = "";
   bool isLoading = false;
 
   final List<Map<String, dynamic>> _items = [
     {
-      'value': '10MIPA1',
-      'label': '10 MIPA 1',
+      'value': 'X-1',
+      'label': 'X-1',
     },
     {
-      'value': '10MIPA2',
-      'label': '10 MIPA 2',
+      'value': 'X-2',
+      'label': 'X-2',
     },
     {
-      'value': '10MIPA3',
-      'label': '10 MIPA 3',
+      'value': 'X-3',
+      'label': 'X-3',
     },
     {
-      'value': '10MIPA4',
-      'label': '10 MIPA 4',
+      'value': 'X-4',
+      'label': 'X-4',
     },
     {
-      'value': '10MIPA5',
-      'label': '10 MIPA 5',
+      'value': 'X-5',
+      'label': 'X-5',
     },
     {
-      'value': '10MIPA6',
-      'label': '10 MIPA 6',
+      'value': 'X-6',
+      'label': 'X-6',
     },
     {
-      'value': '10MIPA7',
-      'label': '10 MIPA 7',
-    },
-    {
-      'value': '10IPS1',
-      'label': '10 IPS 1',
-    },
-    {
-      'value': '10IPS2',
-      'label': '10 IPS 2',
-    },
-    {
-      'value': '10IPS3',
-      'label': '10 IPS 3',
-    },
-    {
-      'value': '10IBB',
-      'label': '10 IBB',
+      'value': 'X-7',
+      'label': 'X-7',
     },
   ];
 
