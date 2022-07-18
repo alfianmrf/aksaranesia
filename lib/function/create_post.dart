@@ -20,12 +20,8 @@ class Post {
 			// if not, create new like
 			if(snapshot.docs.isEmpty) {
 				// incrementing like count
-				_db.collection('story').doc(storyId).get().then((snapshot) {
-					int likes = snapshot.data()['likes'];
-					likes++;
-					_db.collection('story').doc(storyId).update({
-						'likes': likes
-					});
+				_db.collection('story').doc(storyId).update({
+					'likes': FieldValue.increment(1)
 				});
 
 				// storing like data
@@ -38,18 +34,8 @@ class Post {
 			// if yes, delete the like
 			else {
 				// decrementing like count
-				_db.collection('story').doc(storyId).get().then((snapshot) {
-					int likes = snapshot.data()['likes'];
-					if(likes > 0) {
-						likes--;
-						_db.collection('story').doc(storyId).update({
-							'likes': likes
-						});
-					}
-					/*likes--;
-					_db.collection('story').doc(storyId).update({
-						'likes': likes
-					});*/
+				_db.collection('story').doc(storyId).update({
+					'likes': FieldValue.increment(-1)
 				});
 
 				// deleting like data
