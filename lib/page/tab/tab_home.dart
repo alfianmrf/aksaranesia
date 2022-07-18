@@ -292,13 +292,13 @@ class TabHome extends StatelessWidget {
                                                                               // Icons.favorite,
                                                                               Icons.thumb_up,
                                                                               // color: Colors.red,
-                                                                              color: Colors.orangeAccent,
+                                                                              color: Color(0xFFF9AD23),
                                                                             );
                                                                           } else {
                                                                             return Icon(
                                                                               // Icons.favorite_border,
                                                                               Icons.thumb_up_alt_outlined,
-                                                                              color: Colors.grey,
+                                                                              color: Color(0xFF96A7C1),
                                                                             );
                                                                           }
                                                                         }
