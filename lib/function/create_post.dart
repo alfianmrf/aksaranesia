@@ -7,6 +7,7 @@ class Post {
 			'classCode': classCode,
 			'userId': userId,
 			'text': text,
+			'likes': 0,
 			'created': DateTime.now()
 		});
 	}
