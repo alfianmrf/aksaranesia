@@ -130,6 +130,9 @@ class HomeState extends State<Home> {
             setState(() {
               _currentIndex = index;
             });
+            if(_currentIndex == 4){
+              getData();
+            }
           },
           currentIndex: _currentIndex,
           backgroundColor: Colors.white,

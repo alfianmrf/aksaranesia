@@ -40,6 +40,16 @@ class AuthService {
 		}
 	}
 
+	static void addUserPoints(String userId) {
+		try{
+			_db.collection('users').doc(userId).update({
+				'points': FieldValue.increment(50)
+			});
+		} catch (e) {
+			print(e.toString());
+		}
+	}
+
 }
 
 class AuthData {
