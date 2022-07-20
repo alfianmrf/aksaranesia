@@ -1,4 +1,5 @@
 import 'package:aks/function/create_post.dart';
+import 'package:aks/page/create_comment.dart';
 import 'package:aks/ui/elements.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -212,6 +213,7 @@ class TabHome extends StatelessWidget {
                                         var users = user.data;
                                         DateTime date = stories[index]['created'].toDate();
                                         String likes = stories[index]['likes'] != null ? stories[index]['likes'].toString() : '0';
+                                        String comments = stories[index]['comments'] != null ? stories[index]['comments'].toString() : '0';
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -266,44 +268,44 @@ class TabHome extends StatelessWidget {
                                                                     Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
                                                                   },
                                                                   child: ClipRRect(
-                                                                    child: StreamBuilder<QuerySnapshot>(
-                                                                      stream: HomeData.storyLikeSnapshot(_auth.currentUser.uid, stories[index].id),
+                                                                      child: StreamBuilder<QuerySnapshot>(
+                                                                        stream: HomeData.storyLikeSnapshot(_auth.currentUser.uid, stories[index].id),
                                                                         /*FirebaseFirestore.instance.collection('storylike')
                                                                             .where('storyId', isEqualTo: stories[index].id)
                                                                             .where('userId', isEqualTo: _auth.currentUser.uid)
                                                                             .snapshots(),*/
-                                                                      builder: (context, snapshot) {
-                                                                        if(snapshot.connectionState == ConnectionState.waiting) {
-                                                                          return Container(
-                                                                            height: 20.0,
-                                                                            width: 20.0,
-                                                                            child: Center(
-                                                                              child: SizedBox(
-                                                                                child: CircularProgressIndicator(),
-                                                                                height: 10.0,
-                                                                                width: 10.0,
-                                                                              ),
-                                                                            )
-                                                                          );
-                                                                        }
-                                                                        else {
-                                                                          if(snapshot.data.docs.length > 0) {
-                                                                            return Icon(
-                                                                              // Icons.favorite,
-                                                                              Icons.thumb_up,
-                                                                              // color: Colors.red,
-                                                                              color: Color(0xFFF9AD23),
-                                                                            );
-                                                                          } else {
-                                                                            return Icon(
-                                                                              // Icons.favorite_border,
-                                                                              Icons.thumb_up_alt_outlined,
-                                                                              color: Color(0xFF96A7C1),
+                                                                        builder: (context, snapshot) {
+                                                                          if(snapshot.connectionState == ConnectionState.waiting) {
+                                                                            return Container(
+                                                                                height: 20.0,
+                                                                                width: 20.0,
+                                                                                child: Center(
+                                                                                  child: SizedBox(
+                                                                                    child: CircularProgressIndicator(),
+                                                                                    height: 10.0,
+                                                                                    width: 10.0,
+                                                                                  ),
+                                                                                )
                                                                             );
                                                                           }
-                                                                        }
-                                                                      },
-                                                                    )
+                                                                          else {
+                                                                            if(snapshot.data.docs.length > 0) {
+                                                                              return Icon(
+                                                                                // Icons.favorite,
+                                                                                Icons.thumb_up,
+                                                                                // color: Colors.red,
+                                                                                color: Color(0xFFF9AD23),
+                                                                              );
+                                                                            } else {
+                                                                              return Icon(
+                                                                                // Icons.favorite_border,
+                                                                                Icons.thumb_up_alt_outlined,
+                                                                                color: Color(0xFF96A7C1),
+                                                                              );
+                                                                            }
+                                                                          }
+                                                                        },
+                                                                      )
                                                                   ),
                                                                 ),
                                                               ),
@@ -316,10 +318,31 @@ class TabHome extends StatelessWidget {
                                                                 ),
                                                               ),
                                                               SizedBox(width: 15),
-                                                              ImageIcon(
-                                                                AssetImage("assets/images/comment.png"),
-                                                                color: primary.withOpacity(0.5),
-                                                                size: 20,
+                                                              Material(
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (context) => CreateComment(stories[index].id),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  child: ClipRRect(
+                                                                      child: Icon(
+                                                                        Icons.comment,
+                                                                        color: Color(0xFF96A7C1),
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 5),
+                                                              Text(
+                                                                comments,
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: primary.withOpacity(0.5),
+                                                                ),
                                                               ),
                                                             ],
                                                           ),

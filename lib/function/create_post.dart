@@ -8,6 +8,7 @@ class Post {
 			'userId': userId,
 			'text': text,
 			'likes': 0,
+			'comments': 0,
 			'created': DateTime.now()
 		});
 	}
@@ -41,6 +42,22 @@ class Post {
 				// deleting like data
 				_db.collection('storylike').doc(snapshot.docs.first.id).delete();
 			}
+		});
+	}
+
+	static void createStoryComment(String userId, String storyId, String text) {
+		final _db = FirebaseFirestore.instance;
+
+		_db.collection('story').doc(storyId).update({
+			'comments': FieldValue.increment(1)
+		});
+
+		// storing comment data
+		_db.collection('storycomments').doc().set({
+			'userId': userId,
+			'storyId': storyId,
+			'text': text,
+			'created': DateTime.now()
 		});
 	}
 

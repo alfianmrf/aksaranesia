@@ -19,6 +19,21 @@ class HomeData {
 		return _db.collection('story').where('classCode', isEqualTo: classCode).orderBy('created', descending: true).snapshots();
 	}
 
+	/*static Stream<QuerySnapshot> storyDetailSnapshot(String storyId) {
+		var _db = FirebaseFirestore.instance;
+		return _db.collection('story').doc(storyId).collection('comments').orderBy('created', descending: true).snapshots();
+	}*/
+
+	static Stream<DocumentSnapshot> storyDetailSnapshot(String storyId) {
+		var _db = FirebaseFirestore.instance;
+		return _db.collection('story').doc(storyId).snapshots();
+	}
+	
+	static Stream<QuerySnapshot> storyCommentsSnapshot(String storyId) {
+		var _db = FirebaseFirestore.instance;
+		return _db.collection('storycomments').where('storyId', isEqualTo: storyId).orderBy('created', descending: false).snapshots();
+	}
+
 	static Stream<QuerySnapshot> storyLikeSnapshot(String userId, String storyId) {
 		var _db = FirebaseFirestore.instance;
 		return _db.collection('storylike').where('userId', isEqualTo: userId).where('storyId', isEqualTo: storyId).snapshots();
