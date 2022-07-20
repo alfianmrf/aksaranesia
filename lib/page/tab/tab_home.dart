@@ -15,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TabHome extends StatelessWidget {
   final DateTime todaysDate = DateTime.now();
+  bool isEnabled = true;
 
   Widget build(BuildContext context) {
     UserData userData = context.watch<UserNotifier>().user;
@@ -265,7 +266,9 @@ class TabHome extends StatelessWidget {
                                                               Material(
                                                                 child: InkWell(
                                                                   onTap: () {
-                                                                    Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
+                                                                    if(isEnabled) {
+                                                                      Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
+                                                                    }
                                                                   },
                                                                   child: ClipRRect(
                                                                       child: StreamBuilder<QuerySnapshot>(
@@ -276,33 +279,25 @@ class TabHome extends StatelessWidget {
                                                                             .snapshots(),*/
                                                                         builder: (context, snapshot) {
                                                                           if(snapshot.connectionState == ConnectionState.waiting) {
-                                                                            return Container(
-                                                                                height: 20.0,
-                                                                                width: 20.0,
-                                                                                child: Center(
-                                                                                  child: SizedBox(
-                                                                                    child: CircularProgressIndicator(),
-                                                                                    height: 10.0,
-                                                                                    width: 10.0,
-                                                                                  ),
-                                                                                )
-                                                                            );
+                                                                            isEnabled = false;
                                                                           }
-                                                                          else {
-                                                                            if(snapshot.data.docs.length > 0) {
-                                                                              return Icon(
-                                                                                // Icons.favorite,
-                                                                                Icons.thumb_up,
-                                                                                // color: Colors.red,
-                                                                                color: Color(0xFFF9AD23),
-                                                                              );
-                                                                            } else {
-                                                                              return Icon(
-                                                                                // Icons.favorite_border,
-                                                                                Icons.thumb_up_alt_outlined,
-                                                                                color: Color(0xFF96A7C1),
-                                                                              );
-                                                                            }
+                                                                          else{
+                                                                            isEnabled = true;
+                                                                          }
+                                                                          
+                                                                          if(snapshot.data.docs.length > 0) {
+                                                                            return Icon(
+                                                                              // Icons.favorite,
+                                                                              Icons.thumb_up,
+                                                                              // color: Colors.red,
+                                                                              color: Color(0xFFF9AD23),
+                                                                            );
+                                                                          } else {
+                                                                            return Icon(
+                                                                              // Icons.favorite_border,
+                                                                              Icons.thumb_up_alt_outlined,
+                                                                              color: Color(0xFF96A7C1),
+                                                                            );
                                                                           }
                                                                         },
                                                                       )
