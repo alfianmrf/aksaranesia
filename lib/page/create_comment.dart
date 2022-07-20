@@ -109,10 +109,12 @@ class _CreateCommentState extends State<CreateComment> {
                                           Expanded(
                                               child: Row(
                                                   children: [
+                                                    // Tombol Like
                                                     Material(
                                                       child: InkWell(
                                                         onTap: () {
-                                                          Post.createStoryLike(_auth.currentUser.uid, mystory.data['id']);
+                                                          print("Tapped");
+                                                          Post.createStoryLike(_auth.currentUser.uid, mystory.data.id);
                                                         },
                                                         child: ClipRRect(
                                                             child: StreamBuilder<QuerySnapshot>(
@@ -161,6 +163,7 @@ class _CreateCommentState extends State<CreateComment> {
                                                       ),
                                                     ),
                                                     SizedBox(width: 15),
+                                                    // Tombol Comment
                                                     Material(
                                                       child: InkWell(
                                                         child: ClipRRect(
