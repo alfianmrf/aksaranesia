@@ -87,6 +87,9 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -103,11 +106,13 @@ class LoginState extends State<Login> {
                       child: Padding(
                         padding: EdgeInsets.all(25),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 50),
-                            Image.asset('assets/images/logo.png', width: 100),
-                            Text("Masuk ke Aksaranesia.co", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 150),
+                            Row(children: [
+                              Text("Masuk ke", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text(" Aksaranesia.co", style: TextStyle(color:Colors.blue ,fontSize: 18, fontWeight: FontWeight.bold)),
+                            ],),
                             SizedBox(height: 40),
                             Input(controller: emailController, hintText: "Email", icon: Icons.email_outlined),
                             SizedBox(height: 20),
@@ -115,20 +120,20 @@ class LoginState extends State<Login> {
                             SizedBox(height: 40),
                             Button(text: isLoading ? "Sedang Masuk..." : "Masuk", color: Colors.blue, onPressed: isLoading ? null :  () => validateForm(context)),
                             SizedBox(height: 40),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Belum punya akun ? "),
-                                InkWell(onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return Register();
-                                    }
-                                  ));
-                                }, 
-                                child: Text("Daftar Sekarang", style: TextStyle(color: Colors.blue))),
-                              ],
-                            )
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     Text("Belum punya akun ? "),
+                            //     InkWell(onTap: () {
+                            //       Navigator.push(context, MaterialPageRoute(
+                            //         builder: (context) {
+                            //           return Register();
+                            //         }
+                            //       ));
+                            //     }, 
+                            //     child: Text("Daftar Sekarang", style: TextStyle(color: Colors.blue))),
+                            //   ],
+                            // )
                           ],
                         ),
                       )

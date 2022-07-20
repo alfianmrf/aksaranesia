@@ -157,14 +157,16 @@ class RegisterState extends State<Register> {
                     child: Padding(
                       padding: EdgeInsets.all(25),
                       child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.topLeft,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Daftar Aksaranesia", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                              Text("Daftar", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                               SizedBox(height: 10),
-                              Text("Membuat Akun Baru Aksaranesia"),
+                              Text("Mohon isi data dengan benar"),
                               SizedBox(height: 25),
                             ]
                           )
@@ -189,18 +191,18 @@ class RegisterState extends State<Register> {
                           currentSelectedValue: currentSelectedValue,
                         ),
 
-                        SizedBox(height: 15),
-                        Select(
-                          onChanged: (value) {
-                            setState(() {
-                              tipeUser = value;
-                            });
-                          },
-                          icon: Icons.supervised_user_circle_outlined,
-                          items: _tipe,
-                          text: "Pilih Kelas",
-                          currentSelectedValue: tipeUser,
-                        ),
+                        // SizedBox(height: 15),
+                        // Select(
+                        //   onChanged: (value) {
+                        //     setState(() {
+                        //       tipeUser = value;
+                        //     });
+                        //   },
+                        //   icon: Icons.supervised_user_circle_outlined,
+                        //   items: _tipe,
+                        //   text: "Pilih Kelas",
+                        //   currentSelectedValue: tipeUser,
+                        // ),
                         SizedBox(height: 25),
                         Button(
                           onPressed: isLoading ? null : () => validateForm(context, int.parse(tipeUser)), 

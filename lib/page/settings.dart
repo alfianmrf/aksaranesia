@@ -1,3 +1,4 @@
+import 'package:aks/page/welcome.dart';
 import 'package:aks/ui/elements.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
@@ -76,7 +77,7 @@ class Settings extends StatelessWidget {
                     await _auth.signOut();
                     return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                       builder: (context) {
-                        return Login();
+                        return Welcome();
                       }
                     ), (Route<dynamic> route) => false);
                   },
