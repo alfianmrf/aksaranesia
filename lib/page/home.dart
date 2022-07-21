@@ -92,27 +92,36 @@ class HomeState extends State<Home> {
                         }
                         else {
                           if(notification.data.docs.length > 0) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            return Stack(
+                              alignment: Alignment.center,
                               children: [
-                                ImageIcon(
-                                  AssetImage("assets/images/notification.png"),
+                                Icon(
+                                  Icons.notifications,
                                   color: primary,
-                                  size: 22,
+                                  size: 28,
                                 ),
-                                ImageIcon(
-                                  AssetImage("assets/images/yellowdot.png"),
-                                  color: Color(0xFFF9AD23),
-                                  size: 10,
-                                )
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.only(left: 14, bottom: 10),
+                                  child: Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFF9AD23),
+                                    ),
+                                  ),
+                                ),
                               ],
                             );
                           }
                           else {
-                            return ImageIcon(
-                              AssetImage("assets/images/notification.png"),
+                            return Icon(
+                              Icons.notifications,
                               color: primary,
-                              size: 22,
+                              size: 28,
                             );
                           }
                         }
