@@ -25,7 +25,8 @@ class NotificationState extends State<Notification> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new WillPopScope(
+      child: Scaffold(
       appBar: AppBar(
           title: Text("Pemberitahuan",
               style: TextStyle(
@@ -61,9 +62,10 @@ class NotificationState extends State<Notification> {
                           DateTime date = notifications[index]['created'].toDate();
                             return Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                                            color: notifications[index]['read'] ?
+                                            Colors.white : Color.fromARGB(255, 190, 223, 251),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
                               padding: EdgeInsets.all(12),
                               margin: EdgeInsets.only(bottom: 15),
                               child: Row(
@@ -106,6 +108,12 @@ class NotificationState extends State<Notification> {
           },
         )
       ),
+    ), 
+      onWillPop:()=> _willPopCallback(),
     );
   }
+  Future<bool> _willPopCallback() async {
+   HomeData.updateStatusReadNotification(_auth.currentUser.uid);
+   return Future.value(true);
+} 
 }

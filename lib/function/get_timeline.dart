@@ -43,4 +43,15 @@ class HomeData {
     var _db = FirebaseFirestore.instance;
     return _db.collection('notification').where('ownerId', isEqualTo: ownerId).orderBy('created', descending: true).snapshots();
   }
+
+  static Future<bool> updateStatusReadNotification(String ownerId){
+    var _db = FirebaseFirestore.instance;
+    _db.collection('notification').where('ownerId', isEqualTo: ownerId).get().then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        _db.collection('notification').doc(doc.id).update({
+          'read': true
+        });
+      });
+    });
+  }
 }
