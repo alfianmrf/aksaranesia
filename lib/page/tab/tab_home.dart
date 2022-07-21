@@ -16,6 +16,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class TabHome extends StatelessWidget {
   final DateTime todaysDate = DateTime.now();
   bool isEnabled = true;
+  bool isLoading = true;
+  bool isFirstTime = true;
 
   Widget build(BuildContext context) {
     UserData userData = context.watch<UserNotifier>().user;
@@ -282,26 +284,52 @@ class TabHome extends StatelessWidget {
                                                                             .where('userId', isEqualTo: _auth.currentUser.uid)
                                                                             .snapshots(),*/
                                                                         builder: (context, snapshot) {
-                                                                          if(snapshot.connectionState == ConnectionState.waiting) {
+                                                                          if (snapshot.connectionState == ConnectionState.waiting) {
                                                                             isEnabled = false;
+                                                                            isLoading = true;
                                                                           }
-                                                                          else{
+                                                                          else {
                                                                             isEnabled = true;
+                                                                            isLoading = false;
                                                                           }
-                                                                          
-                                                                          if(snapshot.data.docs.length > 0) {
-                                                                            return Icon(
-                                                                              // Icons.favorite,
-                                                                              Icons.thumb_up,
-                                                                              // color: Colors.red,
-                                                                              color: Color(0xFFF9AD23),
-                                                                            );
-                                                                          } else {
-                                                                            return Icon(
-                                                                              // Icons.favorite_border,
-                                                                              Icons.thumb_up_alt_outlined,
-                                                                              color: Color(0xFF96A7C1),
-                                                                            );
+
+                                                                          if(isFirstTime) {
+                                                                            if(isLoading) {
+                                                                              return Container();
+                                                                            }
+                                                                            else {
+                                                                              isFirstTime = false;
+                                                                              if (snapshot.data.docs.length > 0) {
+                                                                                return Icon(
+                                                                                  // Icons.favorite,
+                                                                                  Icons.thumb_up,
+                                                                                  // color: Colors.red,
+                                                                                  color: Color(0xFFF9AD23),
+                                                                                );
+                                                                              } else {
+                                                                                return Icon(
+                                                                                  // Icons.favorite_border,
+                                                                                  Icons.thumb_up_alt_outlined,
+                                                                                  color: Color(0xFF96A7C1),
+                                                                                );
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                          else {
+                                                                            if (snapshot.data.docs.length > 0) {
+                                                                              return Icon(
+                                                                                // Icons.favorite,
+                                                                                Icons.thumb_up,
+                                                                                // color: Colors.red,
+                                                                                color: Color(0xFFF9AD23),
+                                                                              );
+                                                                            } else {
+                                                                              return Icon(
+                                                                                // Icons.favorite_border,
+                                                                                Icons.thumb_up_alt_outlined,
+                                                                                color: Color(0xFF96A7C1),
+                                                                              );
+                                                                            }
                                                                           }
                                                                         },
                                                                       )

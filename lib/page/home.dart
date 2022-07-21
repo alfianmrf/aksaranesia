@@ -1,5 +1,7 @@
+import 'package:aks/function/get_timeline.dart';
 import 'package:aks/page/create_post.dart';
 import 'package:aks/ui/elements.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:aks/page/list_chat.dart';
@@ -20,8 +22,10 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   InitData init = InitData();
+  var isNewNotificationAvailable = false;
 
   @override
   void initState() {
@@ -38,6 +42,9 @@ class HomeState extends State<Home> {
         data['points'],
         data['type']
     );
+
+    isNewNotificationAvailable = HomeData
+        .checkIfAnyUnreadNotification(_auth.currentUser.uid) as bool;
   }
 
   @override
@@ -54,6 +61,8 @@ class HomeState extends State<Home> {
               children: [
                 InkWell(
                   onTap: () {
+                    print("Penanda");
+                    print(isNewNotificationAvailable);
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return ListChat();
                     }));
@@ -75,10 +84,16 @@ class HomeState extends State<Home> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: ImageIcon(
+                    child: !isNewNotificationAvailable ?
+                    ImageIcon(
                       AssetImage("assets/images/notification.png"),
                       color: primary,
-                      size: 26,
+                      size: 22,
+                    ) :
+                    ImageIcon(
+                      AssetImage("assets/images/clicked_notification.png"),
+                      color: primary,
+                      size: 22,
                     ),
                   ),
                 ),

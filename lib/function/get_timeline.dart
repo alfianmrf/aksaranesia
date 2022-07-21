@@ -54,4 +54,15 @@ class HomeData {
       });
     });
   }
+
+	static Future<bool> checkIfAnyUnreadNotification(String ownerId) {
+		var _db = FirebaseFirestore.instance;
+		return _db.collection('notification').where('ownerId', isEqualTo: ownerId).where('read', isEqualTo: false).get().then((snapshot) {
+			if (snapshot.docs.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+	}
 }
