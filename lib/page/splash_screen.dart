@@ -1,3 +1,4 @@
+import 'package:aks/page/welcome.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -33,7 +34,7 @@ class _SplashState extends State<SplashScreen> {
       } else {
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {
-            return Login();
+            return Welcome();
           }
         ));
       }

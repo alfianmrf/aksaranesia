@@ -89,6 +89,9 @@ class InputChanged extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: 5,
       onChanged: changed,
       controller: controller,
       obscureText: secure,

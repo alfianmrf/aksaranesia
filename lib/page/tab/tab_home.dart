@@ -1,5 +1,8 @@
+import 'package:aks/function/create_post.dart';
+import 'package:aks/page/create_comment.dart';
 import 'package:aks/ui/elements.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aks/page/list_chat.dart';
 import 'package:aks/model/user_model.dart';
@@ -8,12 +11,16 @@ import 'package:aks/function/get_timeline.dart';
 import 'package:aks/page/create_post.dart';
 import 'package:readmore/readmore.dart';
 import 'package:aks/page/view_writing.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TabHome extends StatelessWidget {
   final DateTime todaysDate = DateTime.now();
+  bool isEnabled = true;
 
   Widget build(BuildContext context) {
-    UserData user = context.watch<UserNotifier>().user;
+    UserData userData = context.watch<UserNotifier>().user;
+    final _auth = FirebaseAuth.instance;
+
     return GestureDetector(
         onHorizontalDragEnd: (details) => {
           if (details.primaryVelocity > 0) {
@@ -44,7 +51,7 @@ class TabHome extends StatelessWidget {
             child: Column(
               children: [
                 StreamBuilder<QuerySnapshot>(
-                    stream: HomeData.writingSnapshot(user.classCode),
+                    stream: HomeData.writingSnapshot(userData.classCode),
                     builder: (context, snapshot) {
                       if(snapshot.data == null) {
                         return LinearProgressIndicator(minHeight: 2);
@@ -177,7 +184,7 @@ class TabHome extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(15),
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: HomeData.storySnapshot(user.classCode),
+                      stream: HomeData.storySnapshot(userData.classCode),
                       builder: (context, story) {
                         if(story.data == null) {
                           return Container();
@@ -206,6 +213,8 @@ class TabHome extends StatelessWidget {
                                       } else {
                                         var users = user.data;
                                         DateTime date = stories[index]['created'].toDate();
+                                        String likes = stories[index]['likes'] != null ? stories[index]['likes'].toString() : '0';
+                                        String comments = stories[index]['comments'] != null ? stories[index]['comments'].toString() : '0';
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -254,16 +263,85 @@ class TabHome extends StatelessWidget {
                                                         Expanded(
                                                           child: Row(
                                                             children: [
-                                                              ImageIcon(
-                                                                AssetImage("assets/images/like.png"),
-                                                                color: primary.withOpacity(0.5),
-                                                                size: 20,
+                                                              Material(
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    if(isEnabled) {
+                                                                      if(_auth.currentUser.uid == stories[index]['userId']) {
+                                                                        Post.createStoryLike(_auth.currentUser.uid, stories[index].id, stories[index]['userId'], isMySelf: true);
+                                                                      } else {
+                                                                        Post.createStoryLike(_auth.currentUser.uid, stories[index].id, stories[index]['userId'],);
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  child: ClipRRect(
+                                                                      child: StreamBuilder<QuerySnapshot>(
+                                                                        stream: HomeData.storyLikeSnapshot(_auth.currentUser.uid, stories[index].id),
+                                                                        /*FirebaseFirestore.instance.collection('storylike')
+                                                                            .where('storyId', isEqualTo: stories[index].id)
+                                                                            .where('userId', isEqualTo: _auth.currentUser.uid)
+                                                                            .snapshots(),*/
+                                                                        builder: (context, snapshot) {
+                                                                          if(snapshot.connectionState == ConnectionState.waiting) {
+                                                                            isEnabled = false;
+                                                                          }
+                                                                          else{
+                                                                            isEnabled = true;
+                                                                          }
+                                                                          
+                                                                          if(snapshot.data.docs.length > 0) {
+                                                                            return Icon(
+                                                                              // Icons.favorite,
+                                                                              Icons.thumb_up,
+                                                                              // color: Colors.red,
+                                                                              color: Color(0xFFF9AD23),
+                                                                            );
+                                                                          } else {
+                                                                            return Icon(
+                                                                              // Icons.favorite_border,
+                                                                              Icons.thumb_up_alt_outlined,
+                                                                              color: Color(0xFF96A7C1),
+                                                                            );
+                                                                          }
+                                                                        },
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 5),
+                                                              Text(
+                                                                likes,
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: primary.withOpacity(0.5),
+                                                                ),
                                                               ),
                                                               SizedBox(width: 15),
-                                                              ImageIcon(
-                                                                AssetImage("assets/images/comment.png"),
-                                                                color: primary.withOpacity(0.5),
-                                                                size: 20,
+                                                              Material(
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (context) => CreateComment(stories[index].id),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  child: ClipRRect(
+                                                                      child: Icon(
+                                                                        Icons.comment,
+                                                                        color: Color(0xFF96A7C1),
+                                                                      )
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 5),
+                                                              Text(
+                                                                comments,
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: primary.withOpacity(0.5),
+                                                                ),
                                                               ),
                                                             ],
                                                           ),

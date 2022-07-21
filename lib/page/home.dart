@@ -11,6 +11,7 @@ import 'package:aks/page/tab/tab_borrow.dart';
 import 'package:aks/page/tab/tab_class.dart';
 import 'package:aks/page/tab/tab_profile.dart';
 import 'package:aks/page/settings.dart';
+import 'package:aks/page/notification.dart' as notification;
 
 
 class Home extends StatefulWidget {
@@ -67,7 +68,11 @@ class HomeState extends State<Home> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return notification.Notification();
+                    }));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: ImageIcon(
@@ -130,6 +135,9 @@ class HomeState extends State<Home> {
             setState(() {
               _currentIndex = index;
             });
+            if(_currentIndex == 4){
+              getData();
+            }
           },
           currentIndex: _currentIndex,
           backgroundColor: Colors.white,
