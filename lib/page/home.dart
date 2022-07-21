@@ -1,6 +1,7 @@
 import 'package:aks/function/get_timeline.dart';
 import 'package:aks/page/create_post.dart';
 import 'package:aks/ui/elements.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ import 'package:aks/page/tab/tab_search.dart';
 import 'package:aks/page/tab/tab_borrow.dart';
 import 'package:aks/page/tab/tab_class.dart';
 import 'package:aks/page/tab/tab_profile.dart';
-import 'package:aks/page/settings.dart';
+import 'package:aks/page/settings.dart' as st;
 import 'package:aks/page/notification.dart' as notification;
 
 
@@ -25,7 +26,6 @@ class HomeState extends State<Home> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   InitData init = InitData();
-  var isNewNotificationAvailable = false;
 
   @override
   void initState() {
@@ -42,9 +42,6 @@ class HomeState extends State<Home> {
         data['points'],
         data['type']
     );
-
-    isNewNotificationAvailable = HomeData
-        .checkIfAnyUnreadNotification(_auth.currentUser.uid) as bool;
   }
 
   @override
@@ -62,7 +59,6 @@ class HomeState extends State<Home> {
                 InkWell(
                   onTap: () {
                     print("Penanda");
-                    print(isNewNotificationAvailable);
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return ListChat();
                     }));
@@ -84,17 +80,44 @@ class HomeState extends State<Home> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: !isNewNotificationAvailable ?
-                    ImageIcon(
-                      AssetImage("assets/images/notification.png"),
-                      color: primary,
-                      size: 22,
-                    ) :
-                    ImageIcon(
-                      AssetImage("assets/images/clicked_notification.png"),
-                      color: primary,
-                      size: 22,
-                    ),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: HomeData.checkUnreadNotifications(_auth.currentUser.uid),
+                      builder: (context, notification) {
+                        if(notification.connectionState == ConnectionState.waiting) {
+                          return ImageIcon(
+                            AssetImage("assets/images/notification.png"),
+                            color: primary,
+                            size: 22,
+                          );
+                        }
+                        else {
+                          if(notification.data.docs.length > 0) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ImageIcon(
+                                  AssetImage("assets/images/notification.png"),
+                                  color: primary,
+                                  size: 22,
+                                ),
+                                ImageIcon(
+                                  AssetImage("assets/images/yellowdot.png"),
+                                  color: Color(0xFFF9AD23),
+                                  size: 10,
+                                )
+                              ],
+                            );
+                          }
+                          else {
+                            return ImageIcon(
+                              AssetImage("assets/images/notification.png"),
+                              color: primary,
+                              size: 22,
+                            );
+                          }
+                        }
+                      },
+                    )
                   ),
                 ),
               ],
@@ -115,7 +138,7 @@ class HomeState extends State<Home> {
             InkWell(
               child: Icon(Icons.settings_outlined, size: 23),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => st.Settings()));
               },
             )
           ],
