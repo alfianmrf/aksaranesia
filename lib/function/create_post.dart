@@ -1,3 +1,4 @@
+import 'package:aks/function/get_timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
@@ -13,7 +14,7 @@ class Post {
 		});
 	}
 
-	static void createStoryLike(String userId, String storyId) {
+	static void createStoryLike(String userId, String storyId, String ownerId,{bool isMySelf = false}) {
 		final _db = FirebaseFirestore.instance;
 
 		// check if userId has liked storyId
@@ -31,6 +32,12 @@ class Post {
 					'storyId': storyId,
 					'created': DateTime.now()
 				});
+ 
+        // creating notification
+        if(!isMySelf) {
+          createStoryNotification(userId, storyId, ownerId, 'memberikan suka di status kamu');
+        }
+        
 			}
 			// if yes, delete the like
 			else {
@@ -45,7 +52,7 @@ class Post {
 		});
 	}
 
-	static void createStoryComment(String userId, String storyId, String text) {
+	static void createStoryComment(String userId, String storyId, String ownerId, String text, {bool isMySelf = false}) {
 		final _db = FirebaseFirestore.instance;
 
 		_db.collection('story').doc(storyId).update({
@@ -59,7 +66,25 @@ class Post {
 			'text': text,
 			'created': DateTime.now()
 		});
+
+    // creating notification
+    if(!isMySelf) {
+      createStoryNotification(userId, storyId, ownerId, 'mengomentari status kamu');
+    }
 	}
+
+  static void createStoryNotification(String userId, String storyId, String ownerId, String text) {
+    final _db = FirebaseFirestore.instance;
+
+    _db.collection('notification').doc().set({
+      'userId': userId,
+      'storyId': storyId,
+      'ownerId': ownerId,
+      'text': text,
+      'read' : false,
+      'created': DateTime.now()
+    });
+  }
 
 	static void createWriting(String classCode, String userId, String title, String text) {
 		final _db = FirebaseFirestore.instance;

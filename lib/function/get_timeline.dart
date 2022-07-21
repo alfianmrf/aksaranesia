@@ -38,4 +38,9 @@ class HomeData {
 		var _db = FirebaseFirestore.instance;
 		return _db.collection('storylike').where('userId', isEqualTo: userId).where('storyId', isEqualTo: storyId).snapshots();
 	}
+
+  static Stream<QuerySnapshot> storyNotificationSnapshot(String ownerId) {
+    var _db = FirebaseFirestore.instance;
+    return _db.collection('notification').where('ownerId', isEqualTo: ownerId).orderBy('created', descending: true).snapshots();
+  }
 }

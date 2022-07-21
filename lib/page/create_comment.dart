@@ -114,7 +114,7 @@ class _CreateCommentState extends State<CreateComment> {
                                                       child: InkWell(
                                                         onTap: () {
                                                           print("Tapped");
-                                                          Post.createStoryLike(_auth.currentUser.uid, mystory.data.id);
+                                                          Post.createStoryLike(_auth.currentUser.uid, mystory.data.id, mystory.data['userId']);
                                                         },
                                                         child: ClipRRect(
                                                             child: StreamBuilder<QuerySnapshot>(
@@ -222,11 +222,21 @@ class _CreateCommentState extends State<CreateComment> {
                                                       ),
                                                       onPressed: () {
                                                         if(trim(textMessage.text) != "") {
-                                                          Post.createStoryComment(
+                                                          if(_auth.currentUser.uid == mystory.data['userId']) {
+                                                            Post.createStoryComment(
                                                               _auth.currentUser.uid,
                                                               mystory.data.id,
+                                                              mystory.data['userId'],
+                                                              textMessage.text, isMySelf: true);
+                                                              textMessage.text = "";
+                                                          } else {
+                                                            Post.createStoryComment(
+                                                              _auth.currentUser.uid,
+                                                              mystory.data.id,
+                                                              mystory.data['userId'],
                                                               textMessage.text);
                                                           textMessage.text = "";
+                                                          }
                                                         }
                                                       },
                                                       child: Transform.rotate(

@@ -267,7 +267,11 @@ class TabHome extends StatelessWidget {
                                                                 child: InkWell(
                                                                   onTap: () {
                                                                     if(isEnabled) {
-                                                                      Post.createStoryLike(_auth.currentUser.uid, stories[index].id);
+                                                                      if(_auth.currentUser.uid == stories[index]['userId']) {
+                                                                        Post.createStoryLike(_auth.currentUser.uid, stories[index].id, stories[index]['userId'], isMySelf: true);
+                                                                      } else {
+                                                                        Post.createStoryLike(_auth.currentUser.uid, stories[index].id, stories[index]['userId'],);
+                                                                      }
                                                                     }
                                                                   },
                                                                   child: ClipRRect(
