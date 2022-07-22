@@ -1,5 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import 'package:aks/function/auth.dart';
 
 class ProfileData {
 	static Stream<QuerySnapshot> getStatus() {
@@ -38,5 +39,23 @@ class ProfileData {
 			'points': points - 75,
 		}, SetOptions(merge: true));
 		return _db.collection('writing').doc(writingId).delete();
+	}
+
+	static void addBookRead(String userId, String imageUrl, String pdfUrl) {
+		FirebaseFirestore _db = FirebaseFirestore.instance;
+		// check if book with that pdfUrl is already read by userId
+		_db.collection('bookread').where('userId', isEqualTo: userId).where('pdfUrl', isEqualTo: pdfUrl).get().then((snapshot) {
+			if(snapshot.docs.isEmpty) {
+				// if not, add user points and add book to bookread collection of userId
+				AuthService.addUserPoints(userId);
+
+				_db.collection('bookread').doc().set({
+					'userId': userId,
+					'imageUrl': imageUrl,
+					'pdfUrl': pdfUrl,
+					'created': DateTime.now()
+				});
+			}
+		});
 	}
 }

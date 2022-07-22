@@ -345,7 +345,7 @@ class _TabBorrowState extends State<TabBorrow> {
 											Navigator.push(
 												context,
 												new MaterialPageRoute(
-													builder: (BuildContext context) => new Pdf(buku[index]['title'], buku[index]['pdfUrl']),
+													builder: (BuildContext context) => new Pdf(buku[index]['title'], buku[index]['pdfUrl'], buku[index]['imageUrl']),
 												),
 											);
 										},
