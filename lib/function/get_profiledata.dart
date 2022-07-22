@@ -41,7 +41,12 @@ class ProfileData {
 		return _db.collection('writing').doc(writingId).delete();
 	}
 
-	static void addBookRead(String userId, String imageUrl, String pdfUrl) {
+	static Stream<QuerySnapshot> getBookRead(String userId) {
+		FirebaseFirestore _db = FirebaseFirestore.instance;
+		return _db.collection('bookread').where('userId', isEqualTo: userId).orderBy('created', descending: true).snapshots();
+	}
+
+	static void addBookRead(String userId, String imageUrl, String pdfUrl, String title) {
 		FirebaseFirestore _db = FirebaseFirestore.instance;
 		// check if book with that pdfUrl is already read by userId
 		_db.collection('bookread').where('userId', isEqualTo: userId).where('pdfUrl', isEqualTo: pdfUrl).get().then((snapshot) {
@@ -51,6 +56,7 @@ class ProfileData {
 
 				_db.collection('bookread').doc().set({
 					'userId': userId,
+					'title': title,
 					'imageUrl': imageUrl,
 					'pdfUrl': pdfUrl,
 					'created': DateTime.now()

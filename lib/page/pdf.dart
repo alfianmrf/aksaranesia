@@ -75,7 +75,7 @@ class _PdfState extends State<Pdf> {
 
               if(_pagesChanged == document.count && !_isDoneReading) {
                 _isDoneReading = true;
-                ProfileData.addBookRead(_auth.currentUser.uid, widget.cover, widget.asset);
+                ProfileData.addBookRead(_auth.currentUser.uid, widget.cover, widget.asset, widget.title);
 
                 final snackbar = createSnackBar("Terima kasih sudah membaca");
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
