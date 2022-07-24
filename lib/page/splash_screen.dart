@@ -71,7 +71,7 @@ class _SplashState extends State<SplashScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/logo.png', width: 80),
+                  Image.asset('assets/images/new_logo.png', width: 80),
                   SizedBox(height: 20),
                   Text("Aksaranesia", style: TextStyle(fontSize: 18)),
                 ]

@@ -1,13 +1,15 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:aks/function/auth.dart';
+import 'package:aks/function/get_profiledata.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Pdf extends StatefulWidget {
-  const Pdf(this.title, this.asset);
+  const Pdf(this.title, this.asset, this.cover);
 
   final title;
   final asset;
+  final cover;
 
   @override
   _PdfState createState() => _PdfState();
@@ -16,8 +18,11 @@ class Pdf extends StatefulWidget {
 class _PdfState extends State<Pdf> {
   bool _isLoading = true;
   bool _isDoneReading = false;
+  bool firstTime = false;
+
   PDFDocument document;
   int _pagesChanged = 1;
+  int lastPage = 0;
   final _auth = FirebaseAuth.instance;
 
   @override
@@ -60,16 +65,23 @@ class _PdfState extends State<Pdf> {
             zoomSteps: 1,
             pickerButtonColor: Colors.black,
             onPageChanged: (page) {
-              _pagesChanged++;
-              if(_pagesChanged == document.count) {
-                _isDoneReading = true;
-                AuthService.addUserPoints(_auth.currentUser.uid);
-                final snackbar = createSnackBar("Terima kasih sudah membaca (+50 Poin)");
+              if(page <= lastPage) {
+                lastPage = lastPage;
+              }
+              else {
+                lastPage = page;
+                _pagesChanged++;
+              }
 
+              if(_pagesChanged == document.count && !_isDoneReading) {
+                _isDoneReading = true;
+                ProfileData.addBookRead(_auth.currentUser.uid, widget.cover, widget.asset, widget.title);
+
+                final snackbar = createSnackBar("Terima kasih sudah membaca");
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
             },
-          )
+          ),
       )
     );
   }

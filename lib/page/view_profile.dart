@@ -314,20 +314,96 @@ class _ViewProfile extends State<ViewProfile> with SingleTickerProviderStateMixi
               ),
 								Column(
 									children: [
-										Expanded(
-												child: Column(
-													mainAxisAlignment: MainAxisAlignment.center,
-													crossAxisAlignment: CrossAxisAlignment.center,
-													children: [
-														Image.asset("assets/images/comingSoon.png", width: 200),
-														Container(
-																child: Padding(
-																	padding: const EdgeInsets.symmetric(horizontal: 30),
-																	child: Text("Kami sedang mempersiapkan fitur unik untuk kamu", textAlign: TextAlign.center),
-																)
-														)
-													],
-												)
+										StreamBuilder<QuerySnapshot>(
+												stream: ProfileData.getBookRead(widget.userId),
+												builder: (context, book) {
+													if(book.connectionState == ConnectionState.waiting) {
+														return SizedBox(
+																width: double.infinity,
+																height: 2,
+																child: LinearProgressIndicator(minHeight: 2)
+														);
+													} else {
+														var books = book.data.docs;
+														if(books.length <= 0) {
+															return Expanded(
+																child: Center(
+																		child: Column(
+																				mainAxisAlignment: MainAxisAlignment.center,
+																				children: [
+																					Image.asset("assets/images/empty.png", width: 200),
+																					Text("Wah belum ada buku yang dibaca nih...")
+																				]
+																		)
+																),
+															);
+														} else {
+															return Expanded(
+																child: ListView.builder(
+																	itemCount: books.length,
+																	padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+																	itemBuilder: (context, index) {
+																		DateTime date = books[index]['created'].toDate();
+																		return Container(
+																			decoration: BoxDecoration(
+																				color: Colors.white,
+																				borderRadius: BorderRadius
+																						.circular(10),
+																			),
+																			padding: EdgeInsets.all(12),
+																			margin: EdgeInsets.only(
+																					bottom: 15,
+																					left: 8,
+																					right: 8
+																			),
+																			child: Row(
+																				children: [
+																					ClipRRect(
+																							borderRadius: BorderRadius.circular(20),
+																							child: FadeInImage(
+																								image: NetworkImage(
+																										books[index]['imageUrl']),
+																								placeholder: AssetImage(
+																										'assets/images/icon/buku.png'),
+																								width: 100,
+																							)
+																					),
+																					SizedBox(width: 15),
+																					Expanded(
+																							child: Column(
+																								crossAxisAlignment: CrossAxisAlignment
+																										.start,
+																								children: [
+																									Text(
+																										books[index]['title'],
+																										style: TextStyle(
+																											fontWeight: FontWeight.bold,
+																											fontSize: 14,
+																										),
+																									),
+																									SizedBox(height: 5),
+																									Align(alignment: Alignment.bottomLeft,
+																										child: Text("${date.day}/${date.month}/${date.year}",
+																											style: TextStyle(
+																													fontSize: 12,
+																													color: primary.withOpacity(0.5)),
+																											textAlign: TextAlign.right,
+																										),
+																									),
+																								],
+																								mainAxisSize: MainAxisSize.max,
+
+																							)
+																					)
+																				],
+																			),
+																		);
+																	},
+																),
+															);
+														}
+													}
+												}
 										)
 									],
 								),

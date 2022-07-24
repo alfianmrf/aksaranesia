@@ -1,24 +1,27 @@
-import 'package:aks/page/typeregist.dart';
-import 'package:aks/page/typelogin.dart';
 import 'package:flutter/material.dart';
 import 'package:aks/function/auth.dart';
 import 'package:aks/function/validate_form.dart';
 import 'package:aks/ui/elements.dart';
 import 'package:aks/page/register.dart';
+import 'package:aks/page/typelogin.dart';
+import 'package:aks/page/teacherregist.dart';
 import 'package:aks/page/login.dart';
 import 'package:aks/page/home.dart';
 
-class Welcome extends StatefulWidget {
+class Typelogin extends StatefulWidget {
   @override
-  WelcomeState createState() => WelcomeState();
+  TypeloginState createState() => TypeloginState();
 }
 
-class WelcomeState extends State<Welcome> {
+class TypeloginState extends State<Typelogin> {
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Container(
           width: size.width,
@@ -26,17 +29,25 @@ class WelcomeState extends State<Welcome> {
           child: Padding(
             padding: EdgeInsets.all(25),
             child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children:[
-                Image.asset('assets/images/new_logo.png', width: 50),
-                Text("Aksaranesia.co", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                Text("Selamat datang di", style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                Text(" Aksaranesia.co", style: TextStyle(color: Colors.blue, fontSize: 19, fontWeight: FontWeight.bold)),
                 ] 
               ),
               SizedBox(
-                height: 20,
+                height: 10,
+              ),
+              Text(
+                "SMA Taruna Intensif Pembangunan Surabaya !",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.4,
@@ -47,41 +58,16 @@ class WelcomeState extends State<Welcome> {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 Text(
-                "Selamat Datang di",
+                "Masuk sebagai",
                 style: TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                " Aksaranesia.co",
-                style: TextStyle(
-                  fontSize: 19,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                "!",
-                style: TextStyle(
-                  fontSize: 19,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ]
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Aplikasi pendukung Gerakan Literasi Sekolah untuk menciptakan generasi Cermat Membaca, Cakap Menulis.",
-                style: TextStyle(
-                  fontSize: 15,
-                  ),
+                ] 
               ),
               SizedBox(
                 height: 20,
@@ -94,7 +80,7 @@ class WelcomeState extends State<Welcome> {
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return Typelogin();
+                          return Login();
                         }
                       ));
                     },
@@ -102,10 +88,14 @@ class WelcomeState extends State<Welcome> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: Text("Log in", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    child: Text("Guru", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 3,
+                  ),
+                  Text("atau"),
+                  SizedBox(
+                    height: 3,
                   ),
                   MaterialButton(
                     minWidth: double.infinity,
@@ -113,7 +103,7 @@ class WelcomeState extends State<Welcome> {
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return Register();
+                          return Login();
                         }
                       ));
                     },
@@ -121,12 +111,12 @@ class WelcomeState extends State<Welcome> {
                       side: BorderSide(color: Colors.blue),
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: Text("Sign up", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold)),
+                    child: Text("Murid", style: TextStyle(color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                 ],
               )
             ],
-          ),
+            ),
           ),
         ),
       ),

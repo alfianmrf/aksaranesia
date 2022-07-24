@@ -1,5 +1,8 @@
+import 'package:aks/function/get_timeline.dart';
 import 'package:aks/page/create_post.dart';
 import 'package:aks/ui/elements.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:aks/page/list_chat.dart';
@@ -10,7 +13,7 @@ import 'package:aks/page/tab/tab_search.dart';
 import 'package:aks/page/tab/tab_borrow.dart';
 import 'package:aks/page/tab/tab_class.dart';
 import 'package:aks/page/tab/tab_profile.dart';
-import 'package:aks/page/settings.dart';
+import 'package:aks/page/settings.dart' as st;
 import 'package:aks/page/notification.dart' as notification;
 
 
@@ -20,6 +23,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   InitData init = InitData();
 
@@ -54,6 +58,7 @@ class HomeState extends State<Home> {
               children: [
                 InkWell(
                   onTap: () {
+                    print("Penanda");
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return ListChat();
                     }));
@@ -75,11 +80,53 @@ class HomeState extends State<Home> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: ImageIcon(
-                      AssetImage("assets/images/notification.png"),
-                      color: primary,
-                      size: 26,
-                    ),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: HomeData.checkUnreadNotifications(_auth.currentUser.uid),
+                      builder: (context, notification) {
+                        if(notification.connectionState == ConnectionState.waiting) {
+                          return ImageIcon(
+                            AssetImage("assets/images/notification.png"),
+                            color: primary,
+                            size: 22,
+                          );
+                        }
+                        else {
+                          if(notification.data.docs.length > 0) {
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Icon(
+                                  Icons.notifications,
+                                  color: primary,
+                                  size: 28,
+                                ),
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.only(left: 14, bottom: 10),
+                                  child: Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFF9AD23),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          else {
+                            return Icon(
+                              Icons.notifications,
+                              color: primary,
+                              size: 28,
+                            );
+                          }
+                        }
+                      },
+                    )
                   ),
                 ),
               ],
@@ -100,7 +147,7 @@ class HomeState extends State<Home> {
             InkWell(
               child: Icon(Icons.settings_outlined, size: 23),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => st.Settings()));
               },
             )
           ],

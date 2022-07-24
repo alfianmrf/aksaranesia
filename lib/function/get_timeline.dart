@@ -54,4 +54,9 @@ class HomeData {
       });
     });
   }
+
+	static Stream<QuerySnapshot> checkUnreadNotifications(String ownerId) {
+		var _db = FirebaseFirestore.instance;
+		return _db.collection('notification').where('ownerId', isEqualTo: ownerId).where('read', isEqualTo: false).snapshots();
+	}
 }
